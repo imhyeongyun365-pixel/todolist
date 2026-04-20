@@ -1,40 +1,46 @@
-import React,{useState} from 'react'
+import React,{useState, useMemo} from 'react'
+import { useTodoStore } from '../contexts/TodoContent'
 import TodoItem from './TodoItem'
 import "./TodoList.css"
-const TodoList = ({todos}) => {
-  const [search,setSearch]=useState("")
-  const onChangeSearch = (e) => {
-    setSearch(e.target.value)
-  }
 
-  const getFilteredData = () => {
-    if (search==="") {
-      return todos
+const TodoList = () => {
+
+   const { todos } = useTodoStore()
+    const [search, setSearch] = useState('')
+
+
+
+    const filteredTodos = useMemo(() => {
+        if (!search.trim()) return todos
+        const q = search.toLowerCase()
+
+        return todos.filter((t)=>t.content.toLowerCase().includes(q))
+
+
+    }, [todos,search])
+
+
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value)
     }
-    return todos.filter((todo)=>
-      todo.content
-        .toLowerCase()
-        .includes(search.toLocaleLowerCase)
-    )
-  }
 
-  const filteredTodos = getFilteredData()
-  return (
-    <div className='TodoList'>
-        <h4>Todo List 🌱</h4>
-        <input type="text" 
-        onChange={onChangeSearch}
-        placeholder='검색어를 입력하세요'/>
-        <div className='todo_wrapper'>
-            {todos.map((todo) => {
-              <TodoItem {...todo} key={todo.id}/>
-              
-            })}
-            
-        
+    return (
+        <div className='TodoList'>
+            <h4>Todo List 🌱</h4>
+            <input
+                type="text"
+                value={search}
+                onChange={onChangeSearch}
+                placeholder='검색어를 입력하세요' />
+            <div className="todos_wrapper">
+                {filteredTodos.map((todo) => (
+
+
+                    <TodoItem key={todo.id} {...todo} />
+                ))}
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default TodoList
