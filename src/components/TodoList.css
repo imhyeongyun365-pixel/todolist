@@ -1,0 +1,18 @@
+.TodoList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+
+.TodoList input {
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid #b9b9b9;
+}
+
+.todo_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
